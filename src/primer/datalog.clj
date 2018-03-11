@@ -31,7 +31,7 @@
 
 (defn artists-in
   [db country-code]
-  (d/q '[:find ?artist-name
+  (d/q '[:find ?a ?artist-name
          :in $ ?country-code
          :where
          [?a :artist/country ?country-code]
