@@ -7,51 +7,51 @@
 
 ---
 
-## Datomic Cloudを起動する
+## 必要なもの
+
+- AWSアカウント
+- [Clojure CLI](https://clojure.org/guides/deps_and_cli)
+- AWS CLI
+- GitHubアカウント
 
 ---
 
-## Datomic Cloudに開発環境から接続する
+## Datomic Cloudを起動する
+
+- AWS MarketplaceからCloudFormationに必要なパラメタを指定して起動
+- テストが終わったらEC2インスタンスを止めるのを忘れずに！
+  - [秒単位課金](https://aws.amazon.com/jp/about-aws/whats-new/2017/10/announcing-amazon-ec2-per-second-billing/)で無駄がなくなってます
 
 ---
 
 ## Music Brainzサンプルデータをアップロード
 
+- [Music Brainz](https://musicbrainz.org/)はオープンな音楽の百科事典
 - [mbrainz-sample](https://github.com/Datomic/mbrainz-sample)はDatomic On-prem向けのサンプルデータ
   - 手順はDatomic Cloudに適用できない
   - 今のところ、Datomic Cloud向けimporter/exporterはバンドルされていない
 -  [mbrainz-importer](https://github.com/Datomic/mbrainz-importer)
+- `config/manifest.edn.sample`を`config/manifest.edn`にコピーして編集
+
+```
+{:client-cfg {:region "us-west-2"
+              :server-type :cloud
+              :system "signifier-dev"
+              :query-group "signifier-dev"
+              :endpoint "http://entry.signifier-dev.us-west-2.datomic.net:8182"
+              :proxy-host "localhost"
+              :proxy-port 8182}
+ :db-name "mbrainz-subset"
+ :basedir "subsets"
+ :concurrency 3}
+```
 
 ```
 [kenji@k2n-mbp13: ] clojure -m datomic.mbrainz.importer config/manifest.edn
 Loading batch file for  :schema
 Batches already completed:  0
 .{:process {:forms 1}, :result {:txes 1, :datoms 304}}
-"Elapsed time: 370.702508 msecs"
-Loading batch file for  :enums
-Batches already completed:  1
-.{:process {:forms 1}, :result {:txes 1, :datoms 61}}
-"Elapsed time: 271.003751 msecs"
-Loading batch file for  :super-enums
-Batches already completed:  2
-.{:process {:forms 1}, :result {:txes 1, :datoms 16388}}
-"Elapsed time: 3297.400394 msecs"
-Loading batch file for  :artists
-Batches already completed:  3
-.{:process {:forms 1}, :result {:txes 1, :datoms 28647}}
-"Elapsed time: 2553.08423 msecs"
-Loading batch file for  :areleases
-Batches already completed:  4
-..{:process {:forms 2}, :result {:txes 2, :datoms 40568}}
-"Elapsed time: 3044.449518 msecs"
-Loading batch file for  :areleases-artists
-Batches already completed:  6
-..{:process {:forms 2}, :result {:txes 2, :datoms 10560}}
-"Elapsed time: 3605.920163 msecs"
-Loading batch file for  :labels
-Batches already completed:  8
-.{:process {:forms 1}, :result {:txes 1, :datoms 6157}}
-"Elapsed time: 736.040537 msecs"
+...
 Loading batch file for  :releases
 Batches already completed:  9
 ..{:process {:forms 2}, :result {:txes 2, :datoms 103856}}
@@ -66,3 +66,25 @@ Batches already completed:  13
 "Elapsed time: 46358.909202 msecs"
 "Elapsed time: 68590.385983 msecs"
 ```
+
+--- 
+
+## Datomic Cloudに開発環境から接続する
+
+- 環境変数を設定する
+
+````
+export DATOMIC_AWS_REGION=us-west-2 # MarketPlaceで選択したAWSリージョン
+export DATOMIC_SYSTEM=my-system # Marketplaceで指定したシステム名
+export DATOMIC_QUERY_GROUP=my-system #将来クエリグループが提供された場合に使用。今はシステム名
+export DATOMIC_PROXY_PORT=8182 #Socks proxyのローカルポート番号
+````
+
+- REPLの起動
+
+````
+$ clj
+````
+
+---
+
