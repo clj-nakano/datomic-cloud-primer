@@ -21,6 +21,7 @@
 - AWS MarketplaceからCloudFormationに必要なパラメタを指定して起動
 - テストが終わったらEC2インスタンスを止めるのを忘れずに！
   - [秒単位課金](https://aws.amazon.com/jp/about-aws/whats-new/2017/10/announcing-amazon-ec2-per-second-billing/)で無駄がなくなってます
+- Datomicのライセンスとt2.nano, t2.smallのEC2インスタンスで月額約$30
 
 ---
 
@@ -46,6 +47,10 @@
  :concurrency 3}
 ```
 
+---
+
+## Music Brainzサンプルデータをアップロード
+
 ```
 [kenji@k2n-mbp13: ] clojure -m datomic.mbrainz.importer config/manifest.edn
 Loading batch file for  :schema
@@ -66,6 +71,7 @@ Batches already completed:  13
 "Elapsed time: 46358.909202 msecs"
 "Elapsed time: 68590.385983 msecs"
 ```
+- 約109万件のデータが登録されている
 
 --- 
 
@@ -73,18 +79,30 @@ Batches already completed:  13
 
 - 環境変数を設定する
 
-````
+```
 export DATOMIC_AWS_REGION=us-west-2 # MarketPlaceで選択したAWSリージョン
 export DATOMIC_SYSTEM=my-system # Marketplaceで指定したシステム名
 export DATOMIC_QUERY_GROUP=my-system #将来クエリグループが提供された場合に使用。今はシステム名
 export DATOMIC_PROXY_PORT=8182 #Socks proxyのローカルポート番号
-````
+```
+
+- 本リポジトリをクローン
+
+```
+$ git clone https://github.com/clj-nakano/datomic-cloud-primer.git
+```
+
 
 - REPLの起動
 
 ````
+$ cd datomic-cloud-primer
 $ clj
 ````
 
 ---
+
+## デモ
+
+
 
