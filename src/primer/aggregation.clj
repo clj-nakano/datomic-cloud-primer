@@ -5,8 +5,10 @@
 
 (comment
   (let [db (d/db mb/conn)
-        artist-name "The Beatles"]
-    (->> (d/q '[:find (max ?duration)
+        artist-name "The Beatles"
+        ;artist-name "The Beach Boys"
+]
+    (->> (d/q '[:find (max ?duration) ?artist-name
                 :in $ ?artist-name
                 :where
                 [?a :artist/name ?artist-name]
@@ -15,7 +17,7 @@
               db artist-name)
          first
          first
-         (d/q '[:find ?name
+         (d/q '[:find ?name ?duration
                 :in $ ?artist-name ?duration
                 :where
                 [?t :track/duration ?duration]

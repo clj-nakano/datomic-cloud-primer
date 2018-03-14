@@ -1,5 +1,6 @@
 (ns primer.function
-  (:require [datomic.client.api :as d]
+  (:require [clojure.pprint :as p]
+            [datomic.client.api :as d]
             [primer.mbrainz :as mb]))
 
 (defn custom-fn
@@ -37,3 +38,22 @@
          (or [(clojure.string/starts-with? ?name "は")]
              [(clojure.string/starts-with? ?name "荒")])]
        (d/db mb/conn)))
+
+(defn ja-artists-not-released-in
+  "find フィールドとnot-joinの変数は一致していないければならない"
+  [year]
+  (d/q '[:find ?name ?year
+         :in $ ?year
+         :where
+         [?a :artist/name ?name]
+         [?a :artist/country :country/JP]
+         (not-join [?a ?year]
+                   [?r :release/artists ?a]
+                   [?r :release/year ?year])]
+       (d/db mb/conn) year))
+
+(comment
+  ; はっぴいえんどは1971に”風街ろまん"をリリースしている
+  (p/pprint (ja-artists-not-released-in 1971))
+  ; 1972年のリリースはなし
+  (p/pprint (ja-artists-not-released-in 1972)))
