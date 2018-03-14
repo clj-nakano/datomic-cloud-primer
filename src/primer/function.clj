@@ -8,19 +8,19 @@
       (clojure.string/starts-with? s "荒")))
 
 (comment
- ; calling java instance method
+ ; Javaメソッドの呼び出し
   (d/q '[:find ?name
          :where
          [_ :artist/name ?name]
          [(.contains ^String ?name "ス")]]
        (d/db mb/conn))
-  ; calling clojure func
+  ; Clojure関数の呼び出し
   (d/q '[:find ?name
          :where
          [_ :artist/name ?name]
          [(clojure.string/starts-with? ?name "ザ")]]
        (d/db mb/conn))
-  ; custom func is not supported
+  ; カスタム関数は、サーバ側には存在しないので実行不可能
   ;CompilerException clojure.lang.ExceptionInfo: Server Error 
   ;{:datomic.client-spi/request-id "26a0d891-fdc2-400d-ba57-08c402725f93", :cognitect.anomalies/category 
   ; :cognitect.anomalies/fault, :cognitect.anomalies/message "Server Error", 
@@ -30,6 +30,7 @@
            [_ :artist/name ?name]
            [(primer.function/custom-fn ?name)]]
          (d/db mb/conn))
+  ; Whereは標準では論理積だが、論理和を指定することも可能
   (d/q '[:find ?name
          :where
          [_ :artist/name ?name]
