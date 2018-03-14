@@ -1,14 +1,14 @@
 element.style {
-  width: 900px;
-}
-
-section.present {
   width: 1000px;
 }
 
+section.present {
+  width: 1100px;
+}
+
 .reveal .slides {
-  width: 900px;
-  font-size: 30px;
+  width: 1000px;
+  font-size: 20px;
 }
 
 .reval .slides section>* {
